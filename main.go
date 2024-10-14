@@ -229,6 +229,12 @@ func getMessagesHandler(w http.ResponseWriter, r *http.Request) {
 		messages = append(messages, msg)
 	}
 
+	// Reverse the order of messages so that the latest message is last
+	for i := 0; i < len(messages)/2; i++ {
+		j := len(messages) - 1 - i
+		messages[i], messages[j] = messages[j], messages[i]
+	}
+
 	json.NewEncoder(w).Encode(messages)
 }
 

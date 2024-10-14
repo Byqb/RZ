@@ -80,6 +80,7 @@ a:hover {
         let isLoadingMoreMessages = false;
         let currentPage = 0;
         let hasMoreMessages = true;
+        let scrollTimeout = null;
 
         const authSection = document.getElementById('auth-section');
         const forumSection = document.getElementById('forum-section');
@@ -220,8 +221,9 @@ a:hover {
         }
 
         function fetchMessages() {
-            if (!hasMoreMessages) return Promise.resolve();
+            if (!hasMoreMessages || isLoadingMoreMessages) return Promise.resolve();
             
+            isLoadingMoreMessages = true;
             return fetch(`/get-messages?user_id=${currentUser.id}&other_user_id=${currentChatUser}&page=${currentPage}`)
                 .then(response => response.json())
                 .then(messages => {
@@ -235,12 +237,16 @@ a:hover {
                         fragment.appendChild(messageElement);
                     });
                     
-                    chatMessages.appendChild(fragment);
+                    const scrollHeightBefore = chatMessages.scrollHeight;
+                    chatMessages.insertBefore(fragment, chatMessages.firstChild);
                     
                     if (currentPage === 0) {
-                        chatMessages.scrollTop = 0;
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    } else {
+                        chatMessages.scrollTop = chatMessages.scrollHeight - scrollHeightBefore;
                     }
                     currentPage++;
+                    isLoadingMoreMessages = false;
                 });
         }
 
@@ -257,20 +263,25 @@ a:hover {
         }
 
         function handleScroll() {
-            if (chatMessages.scrollTop + chatMessages.clientHeight >= chatMessages.scrollHeight - 10 && !isLoadingMoreMessages && hasMoreMessages) {
-                isLoadingMoreMessages = true;
-                const scrollHeightBefore = chatMessages.scrollHeight;
-                fetchMessages().then(() => {
-                    isLoadingMoreMessages = false;
-                    chatMessages.scrollTop = chatMessages.scrollHeight - scrollHeightBefore;
-                });
+            if (chatMessages.scrollTop === 0 && hasMoreMessages && !isLoadingMoreMessages) {
+                if (scrollTimeout !== null) {
+                    clearTimeout(scrollTimeout);
+                }
+                
+                scrollTimeout = setTimeout(() => {
+                    const scrollHeightBefore = chatMessages.scrollHeight;
+                    fetchMessages().then(() => {
+                        chatMessages.scrollTop = chatMessages.scrollHeight - scrollHeightBefore;
+                        scrollTimeout = null;
+                    });
+                }, 250); // Wait for 250ms of inactivity before loading more messages
             }
         }
 
         function displayMessage(message) {
             const messageElement = createMessageElement(message);
-            chatMessages.insertBefore(messageElement, chatMessages.firstChild);
-            chatMessages.scrollTop = 0;
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
         function loadMoreMessages() {
