@@ -38,6 +38,13 @@ type Message struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
+type TypingStatus struct {
+	Type     string `json:"type"`
+	UserID   string `json:"user_id"`
+	Nickname string `json:"nickname"`
+	IsTyping bool   `json:"is_typing"`
+}
+
 func initDB() {
 	var err error
 	db, err = sql.Open("sqlite3", "./forum.db")
@@ -141,9 +148,10 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 
 	for {
 		var msg struct {
-			Type      string `json:"type"`
+			Type       string `json:"type"`
 			ReceiverID string `json:"receiver_id"`
-			Content   string `json:"content"`
+			Content    string `json:"content"`
+			IsTyping   bool   `json:"is_typing"`
 		}
 		err := conn.ReadJSON(&msg)
 		if err != nil {
@@ -151,8 +159,12 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 
+		log.Printf("Received message: %+v", msg) // Debug log
+
 		if msg.Type == "message" {
 			sendMessage(userID, msg.ReceiverID, msg.Content)
+		} else if msg.Type == "typing" {
+			sendTypingStatus(userID, msg.ReceiverID, msg.IsTyping)
 		}
 	}
 }
@@ -258,6 +270,36 @@ func sendMessage(senderID, receiverID, content string) {
 	for _, userID := range []string{senderID, receiverID} {
 		if conn, ok := clients[userID]; ok {
 			conn.WriteJSON(msg)
+		}
+	}
+	clientsMux.Unlock()
+}
+
+func sendTypingStatus(senderID, receiverID string, isTyping bool) {
+	log.Printf("%s - Sending typing status: sender=%s, receiver=%s, isTyping=%v", 
+		time.Now().Format("2006/01/02 15:04:05"),
+		senderID, receiverID, isTyping)
+	
+	clientsMux.Lock()
+	sender, ok := users[senderID]
+	if !ok {
+		clientsMux.Unlock()
+		return
+	}
+	
+	status := TypingStatus{
+		Type:     "typing_status",
+		UserID:   senderID,
+		Nickname: sender.Nickname,
+		IsTyping: isTyping,
+	}
+
+	// Send typing status to all connected clients
+	for _, conn := range clients {
+		err := conn.WriteJSON(status)
+		if err != nil {
+			log.Printf("%s - Error sending typing status: %v", 
+				time.Now().Format("2006/01/02 15:04:05"), err)
 		}
 	}
 	clientsMux.Unlock()

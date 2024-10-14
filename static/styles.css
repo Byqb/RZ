@@ -1,5 +1,3 @@
-
-
         body {
             font-family: Arial, sans-serif;
             max-width: 500px;
@@ -79,3 +77,74 @@
             cursor: pointer;
             background-color: #f0f0f0;
         }
+        
+
+
+a {
+  font-size: 5em;
+  font-weight: bold;
+  font-family: sans-serif;
+  text-decoration: none;
+  background: rgba(0, 0, 0, 0) -webkit-gradient(linear, left top, right top, from(#90f3b3), color-stop(#90e9f3), color-stop(#909ff3), color-stop(#cc90f3), color-stop(#f390d1), color-stop(#f39a90), color-stop(#f3e590), to(#b8f390)) repeat scroll 0% 0%/200% 200%;
+  background: rgba(0, 0, 0, 0) linear-gradient(90deg, #90f3b3, #90e9f3, #909ff3, #cc90f3, #f390d1, #f39a90, #f3e590, #b8f390) repeat scroll 0% 0%/200% 200%;
+      background-clip: border-box;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+a:hover {
+  -webkit-animation: GradientAnimation 2s ease infinite;
+  animation: GradientAnimation 2s ease infinite;
+}
+
+@keyframes GradientAnimation {
+  0% { background-position: 0% 50% }
+  50% { background-position: 100% 50% }
+  100% { background-position: 0% 50% }
+}
+
+.user-item .typing-indicator,
+#typing-indicator {
+    font-style: italic;
+    font-size: 0.8em;
+    animation: neonPulse 1.5s ease-in-out infinite alternate, rgbShift 5s linear infinite;
+    text-shadow: 
+        0 0 5px #fff,
+        0 0 10px #fff,
+        0 0 15px #fff,
+        0 0 20px currentColor,
+        0 0 35px currentColor,
+        0 0 40px currentColor,
+        0 0 50px currentColor,
+        0 0 75px currentColor;
+}
+
+.user-item .typing-indicator {
+    margin-left: 10px;
+}
+
+#typing-indicator {
+    padding: 5px;
+}
+
+@keyframes neonPulse {
+    from {
+        opacity: 0.5;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes rgbShift {
+    0%, 100% {
+        color: rgb(255, 0, 0); /* Red */
+    }
+    33% {
+        color: rgb(0, 255, 0); /* Green */
+    }
+    66% {
+        color: rgb(0, 0, 255); /* Blue */
+    }
+}

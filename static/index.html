@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	  <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css">
     <title>Real-Time Forum</title>
 </head>
 <body>
@@ -34,6 +34,7 @@
                 <div id="chat-messages">
                     <div id="load-more-messages">Load more messages</div>
                 </div>
+                <div id="typing-indicator" style="display: none;"></div>
                 <div id="message-input-area">
                     <input type="text" id="message-input" placeholder="Type a message">
                     <button id="send-message">Send</button>
@@ -43,33 +44,7 @@
     </div>
 </div>
 
-<style> 
 
-
-a {
-  font-size: 5em;
-  font-weight: bold;
-  font-family: sans-serif;
-  text-decoration: none;
-  background: rgba(0, 0, 0, 0) -webkit-gradient(linear, left top, right top, from(#90f3b3), color-stop(#90e9f3), color-stop(#909ff3), color-stop(#cc90f3), color-stop(#f390d1), color-stop(#f39a90), color-stop(#f3e590), to(#b8f390)) repeat scroll 0% 0%/200% 200%;
-  background: rgba(0, 0, 0, 0) linear-gradient(90deg, #90f3b3, #90e9f3, #909ff3, #cc90f3, #f390d1, #f39a90, #f3e590, #b8f390) repeat scroll 0% 0%/200% 200%;
-      background-clip: border-box;
-  color: transparent;
-  -webkit-background-clip: text;
-  background-clip: text;
-}
-
-a:hover {
-  -webkit-animation: GradientAnimation 2s ease infinite;
-  animation: GradientAnimation 2s ease infinite;
-}
-
-@keyframes GradientAnimation {
-  0% { background-position: 0% 50% }
-  50% { background-position: 100% 50% }
-  100% { background-position: 0% 50% }
-}
-</style>
 <script>
         let currentUser = null;
         let socket = null;
@@ -81,6 +56,7 @@ a:hover {
         let currentPage = 0;
         let hasMoreMessages = true;
         let scrollTimeout = null;
+        let typingTimeout = null;
 
         const authSection = document.getElementById('auth-section');
         const forumSection = document.getElementById('forum-section');
@@ -97,6 +73,7 @@ a:hover {
         messageInput.addEventListener('keypress', handleEnterKey);
         chatMessages.addEventListener('scroll', handleScroll);
         document.getElementById('load-more-messages').addEventListener('click', loadMoreMessages);
+        messageInput.addEventListener('input', handleTyping);
 
         function handleRegister(e) {
             e.preventDefault();
@@ -141,15 +118,42 @@ a:hover {
 
         function handleWebSocketMessage(event) {
             const data = JSON.parse(event.data);
+            console.log('Received WebSocket message:', data); // Debug log
             if (data.type === 'online_users') {
                 onlineUsers = new Set(data.users.map(user => user.id));
                 updateUserList();
+            } else if (data.type === 'typing_status') {
+                handleTypingStatus(data);
             } else if (data.sender_id === currentChatUser || data.receiver_id === currentChatUser) {
                 displayMessage(data);
             } else if (data.sender_id !== currentUser.id) {
-                // New message from a user who is not the current chat partner
                 incrementUnreadMessages(data.sender_id);
                 updateUserList();
+            }
+        }
+
+        function handleTypingStatus(data) {
+            console.log('Handling typing status:', data); // Debug log
+            // Update user list typing indicator
+            const userElement = userList.querySelector(`[data-user-id="${data.user_id}"]`);
+            if (userElement) {
+                const typingIndicator = userElement.querySelector('.typing-indicator');
+                if (data.is_typing) {
+                    typingIndicator.style.display = 'inline';
+                } else {
+                    typingIndicator.style.display = 'none';
+                }
+            }
+
+            // Update chat area typing indicator
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (data.user_id === currentChatUser) {
+                if (data.is_typing) {
+                    typingIndicator.textContent = `${data.nickname} is typing...`;
+                    typingIndicator.style.display = 'block';
+                } else {
+                    typingIndicator.style.display = 'none';
+                }
             }
         }
 
@@ -164,8 +168,9 @@ a:hover {
                             const userElement = document.createElement('div');
                             userElement.className = 'user-item';
                             userElement.innerHTML = `
-                                <span>${user.nickname}</span>
+                                <span class="user-name">${user.nickname}</span>
                                 <span class="notification-badge" style="display: none;"></span>
+                                <span class="typing-indicator" style="display: none;">typing...</span>
                             `;
                             userElement.setAttribute('data-user-id', user.id);
                             userElement.onclick = () => loadChat(user.id);
@@ -218,6 +223,8 @@ a:hover {
             // Clear unread messages for this user
             unreadMessages[userId] = 0;
             updateUserList();
+            // Reset typing indicator when changing chats
+            document.getElementById('typing-indicator').style.display = 'none';
         }
 
         function fetchMessages() {
@@ -303,6 +310,27 @@ a:hover {
                     content: content
                 }));
                 messageInput.value = '';
+            }
+        }
+
+        function handleTyping() {
+            console.log('Handling typing event'); // Debug log
+            if (currentChatUser) {
+                clearTimeout(typingTimeout);
+                socket.send(JSON.stringify({
+                    type: 'typing',
+                    receiver_id: currentChatUser,
+                    is_typing: true
+                }));
+                console.log('Sent typing true'); // Debug log
+                typingTimeout = setTimeout(() => {
+                    socket.send(JSON.stringify({
+                        type: 'typing',
+                        receiver_id: currentChatUser,
+                        is_typing: false
+                    }));
+                    console.log('Sent typing false'); // Debug log
+                }, 1000);
             }
         }
 
