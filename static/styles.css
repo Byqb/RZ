@@ -367,3 +367,18 @@ a:hover {
     font-size: 0.8em;
     color: #666;
 }
+
+.message.sent {
+    align-self: flex-end;
+    background-color: #dcf8c6;
+}
+
+.message.received {
+    align-self: flex-start;
+    background-color: #f1f0f0;
+}
+
+#chat-messages {
+    display: flex;
+    flex-direction: column;
+}
