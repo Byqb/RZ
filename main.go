@@ -9,6 +9,7 @@ import (
 		"sync"
 	"time"
 	"strconv"
+	"strings"
 
 	"github.com/gorilla/websocket"
 	_ "github.com/mattn/go-sqlite3"
@@ -45,6 +46,23 @@ type TypingStatus struct {
 	IsTyping bool   `json:"is_typing"`
 }
 
+type Post struct {
+	ID         string    `json:"id"`
+	UserID     string    `json:"user_id"`
+	Title      string    `json:"title"`
+	Content    string    `json:"content"`
+	Categories []string  `json:"categories"`
+	CreatedAt  time.Time `json:"created_at"`
+}
+
+type Comment struct {
+	ID        string    `json:"id"`
+	PostID    string    `json:"post_id"`
+	UserID    string    `json:"user_id"`
+	Content   string    `json:"content"`
+	CreatedAt time.Time `json:"created_at"`
+}
+
 func initDB() {
 	var err error
 	db, err = sql.Open("sqlite3", "./forum.db")
@@ -67,6 +85,24 @@ func initDB() {
 			created_at DATETIME,
 			FOREIGN KEY (sender_id) REFERENCES users(id),
 			FOREIGN KEY (receiver_id) REFERENCES users(id)
+		);
+		CREATE TABLE IF NOT EXISTS posts (
+			id TEXT PRIMARY KEY,
+			user_id TEXT,
+			title TEXT,
+			content TEXT,
+			categories TEXT,
+			created_at DATETIME,
+			FOREIGN KEY (user_id) REFERENCES users(id)
+		);
+		CREATE TABLE IF NOT EXISTS comments (
+			id TEXT PRIMARY KEY,
+			post_id TEXT,
+			user_id TEXT,
+			content TEXT,
+			created_at DATETIME,
+			FOREIGN KEY (post_id) REFERENCES posts(id),
+			FOREIGN KEY (user_id) REFERENCES users(id)
 		);
 	`)
 	if err != nil {
@@ -305,6 +341,100 @@ func sendTypingStatus(senderID, receiverID string, isTyping bool) {
 	clientsMux.Unlock()
 }
 
+func createPostHandler(w http.ResponseWriter, r *http.Request) {
+	// Check if user is authenticated
+	userID := r.Header.Get("User-ID")
+	if userID == "" {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	var post Post
+	err := json.NewDecoder(r.Body).Decode(&post)
+	if err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	post.ID = uuid.New().String()
+	post.UserID = userID
+	post.CreatedAt = time.Now()
+
+	// Insert post into database
+	_, err = db.Exec("INSERT INTO posts (id, user_id, title, content, categories, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+		post.ID, post.UserID, post.Title, post.Content, strings.Join(post.Categories, ","), post.CreatedAt)
+	if err != nil {
+		log.Printf("Error inserting post into database: %v", err)
+		http.Error(w, "Error creating post", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(post)
+}
+
+func getPostsHandler(w http.ResponseWriter, r *http.Request) {
+	rows, err := db.Query("SELECT id, user_id, title, content, categories, created_at FROM posts ORDER BY created_at DESC")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	var posts []Post
+	for rows.Next() {
+		var post Post
+		var categoriesJSON string
+		rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &categoriesJSON, &post.CreatedAt)
+		json.Unmarshal([]byte(categoriesJSON), &post.Categories)
+		posts = append(posts, post)
+	}
+
+	json.NewEncoder(w).Encode(posts)
+}
+
+func createCommentHandler(w http.ResponseWriter, r *http.Request) {
+	// Check if user is authenticated
+	userID := r.Header.Get("User-ID")
+	if userID == "" {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	var comment Comment
+	json.NewDecoder(r.Body).Decode(&comment)
+	comment.ID = uuid.New().String()
+	comment.CreatedAt = time.Now()
+
+	_, err := db.Exec("INSERT INTO comments (id, post_id, user_id, content, created_at) VALUES (?, ?, ?, ?, ?)",
+		comment.ID, comment.PostID, comment.UserID, comment.Content, comment.CreatedAt)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(comment)
+}
+
+func getCommentsHandler(w http.ResponseWriter, r *http.Request) {
+	postID := r.URL.Query().Get("post_id")
+	rows, err := db.Query("SELECT id, post_id, user_id, content, created_at FROM comments WHERE post_id = ? ORDER BY created_at", postID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+
+	var comments []Comment
+	for rows.Next() {
+		var comment Comment
+		rows.Scan(&comment.ID, &comment.PostID, &comment.UserID, &comment.Content, &comment.CreatedAt)
+		comments = append(comments, comment)
+	}
+
+	json.NewEncoder(w).Encode(comments)
+}
+
 func main() {
 	initDB()
 	defer db.Close()
@@ -314,6 +444,10 @@ func main() {
 	http.HandleFunc("/ws", wsHandler)
 	http.HandleFunc("/get-messages", getMessagesHandler)
 	http.HandleFunc("/get-users", getUsersHandler)
+	http.HandleFunc("/create-post", createPostHandler)
+	http.HandleFunc("/get-posts", getPostsHandler)
+	http.HandleFunc("/create-comment", createCommentHandler)
+	http.HandleFunc("/get-comments", getCommentsHandler)
 
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/", fs)

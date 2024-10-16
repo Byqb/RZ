@@ -148,3 +148,116 @@ a:hover {
         color: rgb(0, 0, 255); /* Blue */
     }
 }
+
+.container {
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+    padding: 20px;
+}
+#auth-section, #forum-section {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+#post-creation-area {
+    background: #e9e9e9;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+/* Post styles */
+.post {
+    background: white;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.post h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.post p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.post span {
+    font-size: 0.9em;
+    color: #666;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.post button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.post button:hover {
+    background-color: #45a049;
+}
+
+/* Comment section styles */
+.comment-section {
+    margin-top: 15px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.comment-form {
+    margin-bottom: 15px;
+}
+
+.comment-input {
+    width: calc(100% - 110px);
+    padding: 8px;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.submit-comment {
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.submit-comment:hover {
+    background-color: #007B9A;
+}
+
+.comments {
+    margin-top: 15px;
+}
+
+.comment {
+    background: #f9f9f9;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    border-left: 3px solid #4CAF50;
+}

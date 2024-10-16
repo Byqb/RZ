@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <title>Real-Time Forum</title>
+    <style>
+        /* Add some basic styles for the category selection */
+        .category-selection {
+            margin-top: 10px;
+        }
+        .category-option {
+            display: inline-block;
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
 
@@ -25,25 +35,43 @@
     </div>
 
 
-    <div id="forum-section">
+    <div id="forum-section" style="display: none;">
         <a href="#">Real-Zift</a>
-        <div id="chat-container">
-            <div id="user-list"></div>
-            <div id="chat-area">
-                <h3 id="chat-title">Select a user to start chatting</h3>
-                <div id="chat-messages">
-                    <div id="load-more-messages">Load more messages</div>
+        <div id="forum-container">
+            <div id="post-list">
+                <h3>Posts</h3>
+                <div id="posts"></div>
+            </div>
+            <div id="chat-container">
+                <div id="user-list"></div>
+                <div id="chat-area">
+                    <h3 id="chat-title">Select a user to start chatting</h3>
+                    <div id="chat-messages">
+                        <div id="load-more-messages">Load more messages</div>
+                    </div>
+                    <div id="typing-indicator" style="display: none;"></div>
+                    <div id="message-input-area">
+                        <input type="text" id="message-input" placeholder="Type a message">
+                        <button id="send-message">Send</button>
+                    </div>
                 </div>
-                <div id="typing-indicator" style="display: none;"></div>
-                <div id="message-input-area">
-                    <input type="text" id="message-input" placeholder="Type a message">
-                    <button id="send-message">Send</button>
+            </div>
+            <div id="post-creation-area" style="display: none;">
+                <h3>Create a New Post</h3>
+                <input type="text" id="post-title" placeholder="Post Title">
+                <textarea id="post-content" placeholder="Post Content"></textarea>
+                <div class="category-selection">
+                    <h4>Select Categories:</h4>
+                    <label class="category-option"><input type="checkbox" value="general"> General</label>
+                    <label class="category-option"><input type="checkbox" value="technology"> Technology</label>
+                    <label class="category-option"><input type="checkbox" value="sports"> Sports</label>
+                    <label class="category-option"><input type="checkbox" value="entertainment"> Entertainment</label>
+                    <label class="category-option"><input type="checkbox" value="science"> Science</label>
                 </div>
+                <button id="create-post-btn">Create Post</button>
             </div>
         </div>
     </div>
-</div>
-
 
 <script>
         let currentUser = null;
@@ -57,6 +85,8 @@
         let hasMoreMessages = true;
         let scrollTimeout = null;
         let typingTimeout = null;
+        let currentPost = null;
+        let isLoggedIn = false;
 
         const authSection = document.getElementById('auth-section');
         const forumSection = document.getElementById('forum-section');
@@ -74,6 +104,7 @@
         chatMessages.addEventListener('scroll', handleScroll);
         document.getElementById('load-more-messages').addEventListener('click', loadMoreMessages);
         messageInput.addEventListener('input', handleTyping);
+        document.getElementById('create-post-btn').addEventListener('click', createPost);
 
         function handleRegister(e) {
             e.preventDefault();
@@ -104,10 +135,13 @@
             }).then(response => response.json())
             .then(user => {
                 currentUser = user;
+                isLoggedIn = true;
                 authSection.style.display = 'none';
                 forumSection.style.display = 'block';
+                document.getElementById('post-creation-area').style.display = 'block';
                 initWebSocket();
                 fetchUsers();
+                fetchPosts();
             }).catch(() => alert('Login failed.'));
         }
 
@@ -334,9 +368,145 @@
             }
         }
 
+        function createPost() {
+            const title = document.getElementById('post-title').value;
+            const content = document.getElementById('post-content').value;
+            const categories = Array.from(document.querySelectorAll('.category-option input:checked')).map(input => input.value);
+
+            console.log('Attempting to create post:', { title, content, categories });
+
+            if (!title || !content || categories.length === 0) {
+                alert('Please fill in all fields and select at least one category.');
+                return;
+            }
+
+            if (!currentUser || !currentUser.id) {
+                console.error('User not logged in or user ID missing');
+                alert('You must be logged in to create a post.');
+                return;
+            }
+
+            fetch('/create-post', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'User-ID': currentUser.id
+                },
+                body: JSON.stringify({ title, content, categories })
+            }).then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(`HTTP error! status: ${response.status}, message: ${text}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(post => {
+                console.log('Post created successfully:', post);
+                document.getElementById('post-title').value = '';
+                document.getElementById('post-content').value = '';
+                document.querySelectorAll('.category-option input:checked').forEach(input => input.checked = false);
+                addPostToList(post);
+            }).catch(error => {
+                console.error('Error creating post:', error);
+                alert('Error creating post: ' + error.message);
+            });
+        }
+
+        function addPostToList(post) {
+            const postsContainer = document.getElementById('posts');
+            const postElement = document.createElement('div');
+            postElement.className = 'post';
+            postElement.innerHTML = `
+                <h4>${post.title}</h4>
+                <p>${post.content}</p>
+                <span>Categories: ${post.categories.join(', ')}</span>
+                <button class="view-comments" data-post-id="${post.id}">View Comments</button>
+                <div class="comment-section" style="display: none;">
+                    ${isLoggedIn ? `
+                        <div class="comment-form">
+                            <input type="text" class="comment-input" placeholder="Add a comment">
+                            <button class="submit-comment" data-post-id="${post.id}">Submit Comment</button>
+                        </div>
+                    ` : ''}
+                    <div class="comments"></div>
+                </div>
+            `;
+            postsContainer.appendChild(postElement);
+
+            const viewCommentsBtn = postElement.querySelector('.view-comments');
+            const commentSection = postElement.querySelector('.comment-section');
+            
+            viewCommentsBtn.addEventListener('click', () => {
+                if (commentSection.style.display === 'none') {
+                    fetchComments(post.id, commentSection.querySelector('.comments'));
+                    commentSection.style.display = 'block';
+                    viewCommentsBtn.textContent = 'Hide Comments';
+                } else {
+                    commentSection.style.display = 'none';
+                    viewCommentsBtn.textContent = 'View Comments';
+                }
+            });
+
+            if (isLoggedIn) {
+                const submitCommentBtn = postElement.querySelector('.submit-comment');
+                submitCommentBtn.addEventListener('click', () => {
+                    const commentInput = postElement.querySelector('.comment-input');
+                    createComment(post.id, commentInput.value);
+                    commentInput.value = '';
+                });
+            }
+        }
+
+        function fetchComments(postId, commentsContainer) {
+            fetch(`/get-comments?post_id=${postId}`)
+                .then(response => response.json())
+                .then(comments => {
+                    commentsContainer.innerHTML = '';
+                    comments.forEach(comment => {
+                        const commentElement = document.createElement('div');
+                        commentElement.className = 'comment';
+                        commentElement.textContent = comment.content;
+                        commentsContainer.appendChild(commentElement);
+                    });
+                })
+                .catch(error => console.error('Error fetching comments:', error));
+        }
+
+        function createComment(postId, content) {
+            if (!content.trim()) {
+                alert('Please enter a comment.');
+                return;
+            }
+
+            fetch('/create-comment', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'User-ID': currentUser.id
+                },
+                body: JSON.stringify({ post_id: postId, content })
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to create comment');
+                }
+                return response.json();
+            })
+            .then(comment => {
+                const postElement = document.querySelector(`.post button[data-post-id="${postId}"]`).closest('.post');
+                const commentsContainer = postElement.querySelector('.comments');
+                fetchComments(postId, commentsContainer);
+            }).catch(error => {
+                console.error('Error creating comment:', error);
+                alert('Error creating comment. Please try again.');
+            });
+        }
+
         // Initial display
         authSection.style.display = 'block';
         forumSection.style.display = 'none';
+        document.getElementById('post-creation-area').style.display = 'none';
 </script>
 </body>
 </html>
