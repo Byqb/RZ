@@ -5,20 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <title>Real-Time Forum</title>
-    <style>
-        /* Add some basic styles for the category selection */
-        .category-selection {
-            margin-top: 10px;
-        }
-        .category-option {
-            display: inline-block;
-            margin-right: 10px;
-        }
-    </style>
 </head>
 <body>
-
-
     <div id="auth-section">
         <a href="#">Real-Zift</a>
         <form id="register-form">
@@ -34,46 +22,49 @@
         </form>
     </div>
 
-
     <div id="forum-section" style="display: none;">
         <a href="#">Real-Zift</a>
         <div id="forum-container">
+            <div id="top-section">
+                <div id="chat-and-users">
+                    <div id="user-list"></div>
+                    <div id="chat-container">
+                        <div id="chat-area">
+                            <h3 id="chat-title">Select a user to start chatting</h3>
+                            <div id="chat-messages">
+                                <div id="load-more-messages">Load more messages</div>
+                            </div>
+                            <div id="typing-indicator" style="display: none;"></div>
+                            <div id="message-input-area">
+                                <input type="text" id="message-input" placeholder="Type a message">
+                                <button id="send-message">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="post-creation-area">
+                    <h3>Create a New Post</h3>
+                    <input type="text" id="post-title" placeholder="Post Title">
+                    <textarea id="post-content" placeholder="Post Content"></textarea>
+                    <div class="category-selection">
+                        <h4>Select Categories:</h4>
+                        <label class="category-option"><input type="checkbox" value="general"> General</label>
+                        <label class="category-option"><input type="checkbox" value="technology"> Technology</label>
+                        <label class="category-option"><input type="checkbox" value="sports"> Sports</label>
+                        <label class="category-option"><input type="checkbox" value="entertainment"> Entertainment</label>
+                        <label class="category-option"><input type="checkbox" value="science"> Science</label>
+                    </div>
+                    <button id="create-post-btn">Create Post</button>
+                </div>
+            </div>
             <div id="post-list">
                 <h3>Posts</h3>
                 <div id="posts"></div>
             </div>
-            <div id="chat-container">
-                <div id="user-list"></div>
-                <div id="chat-area">
-                    <h3 id="chat-title">Select a user to start chatting</h3>
-                    <div id="chat-messages">
-                        <div id="load-more-messages">Load more messages</div>
-                    </div>
-                    <div id="typing-indicator" style="display: none;"></div>
-                    <div id="message-input-area">
-                        <input type="text" id="message-input" placeholder="Type a message">
-                        <button id="send-message">Send</button>
-                    </div>
-                </div>
-            </div>
-            <div id="post-creation-area" style="display: none;">
-                <h3>Create a New Post</h3>
-                <input type="text" id="post-title" placeholder="Post Title">
-                <textarea id="post-content" placeholder="Post Content"></textarea>
-                <div class="category-selection">
-                    <h4>Select Categories:</h4>
-                    <label class="category-option"><input type="checkbox" value="general"> General</label>
-                    <label class="category-option"><input type="checkbox" value="technology"> Technology</label>
-                    <label class="category-option"><input type="checkbox" value="sports"> Sports</label>
-                    <label class="category-option"><input type="checkbox" value="entertainment"> Entertainment</label>
-                    <label class="category-option"><input type="checkbox" value="science"> Science</label>
-                </div>
-                <button id="create-post-btn">Create Post</button>
-            </div>
         </div>
     </div>
 
-<script>
+    <script>
         let currentUser = null;
         let socket = null;
         let currentChatUser = null;
@@ -141,7 +132,7 @@
                 document.getElementById('post-creation-area').style.display = 'block';
                 initWebSocket();
                 fetchUsers();
-                fetchPosts();
+                fetchPosts(); // Add this line to fetch posts after login
             }).catch(() => alert('Login failed.'));
         }
 
@@ -407,33 +398,39 @@
                 document.getElementById('post-title').value = '';
                 document.getElementById('post-content').value = '';
                 document.querySelectorAll('.category-option input:checked').forEach(input => input.checked = false);
-                addPostToList(post);
+                addPostToList(post, false); // Add new post to the top
             }).catch(error => {
                 console.error('Error creating post:', error);
                 alert('Error creating post: ' + error.message);
             });
         }
 
-        function addPostToList(post) {
+        function addPostToList(post, addToBottom = false) {
             const postsContainer = document.getElementById('posts');
             const postElement = document.createElement('div');
             postElement.className = 'post';
             postElement.innerHTML = `
                 <h4>${post.title}</h4>
                 <p>${post.content}</p>
-                <span>Categories: ${post.categories.join(', ')}</span>
+                <div class="categories">Categories: ${post.categories.join(', ')}</div>
+                <div class="author">Posted by: ${post.user_nickname || currentUser.nickname}</div>
                 <button class="view-comments" data-post-id="${post.id}">View Comments</button>
                 <div class="comment-section" style="display: none;">
                     ${isLoggedIn ? `
                         <div class="comment-form">
                             <input type="text" class="comment-input" placeholder="Add a comment">
-                            <button class="submit-comment" data-post-id="${post.id}">Submit Comment</button>
+                            <button class="submit-comment" data-post-id="${post.id}">Submit</button>
                         </div>
                     ` : ''}
                     <div class="comments"></div>
                 </div>
             `;
-            postsContainer.appendChild(postElement);
+
+            if (addToBottom) {
+                postsContainer.appendChild(postElement);
+            } else {
+                postsContainer.insertBefore(postElement, postsContainer.firstChild);
+            }
 
             const viewCommentsBtn = postElement.querySelector('.view-comments');
             const commentSection = postElement.querySelector('.comment-section');
@@ -451,10 +448,14 @@
 
             if (isLoggedIn) {
                 const submitCommentBtn = postElement.querySelector('.submit-comment');
+                const commentInput = postElement.querySelector('.comment-input');
                 submitCommentBtn.addEventListener('click', () => {
-                    const commentInput = postElement.querySelector('.comment-input');
                     createComment(post.id, commentInput.value);
-                    commentInput.value = '';
+                });
+                commentInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        createComment(post.id, commentInput.value);
+                    }
                 });
             }
         }
@@ -467,7 +468,13 @@
                     comments.forEach(comment => {
                         const commentElement = document.createElement('div');
                         commentElement.className = 'comment';
-                        commentElement.textContent = comment.content;
+                        commentElement.innerHTML = `
+                            <div class="comment-content">${comment.content}</div>
+                            <div class="comment-meta">
+                                <span class="comment-author">${comment.user_nickname}</span>
+                                <span class="comment-time">${new Date(comment.created_at).toLocaleString()}</span>
+                            </div>
+                        `;
                         commentsContainer.appendChild(commentElement);
                     });
                 })
@@ -496,17 +503,47 @@
             .then(comment => {
                 const postElement = document.querySelector(`.post button[data-post-id="${postId}"]`).closest('.post');
                 const commentsContainer = postElement.querySelector('.comments');
-                fetchComments(postId, commentsContainer);
+                
+                // Add the new comment to the existing comments
+                const commentElement = document.createElement('div');
+                commentElement.className = 'comment';
+                commentElement.innerHTML = `
+                    <div class="comment-content">${comment.content}</div>
+                    <div class="comment-meta">
+                        <span class="comment-author">${comment.user_nickname}</span>
+                        <span class="comment-time">${new Date(comment.created_at).toLocaleString()}</span>
+                    </div>
+                `;
+                commentsContainer.appendChild(commentElement);
+                
+                // Clear the comment input
+                postElement.querySelector('.comment-input').value = '';
             }).catch(error => {
                 console.error('Error creating comment:', error);
                 alert('Error creating comment. Please try again.');
             });
         }
 
+        function fetchPosts() {
+            fetch('/get-posts')
+                .then(response => response.json())
+                .then(posts => {
+                    const postsContainer = document.getElementById('posts');
+                    postsContainer.innerHTML = ''; // Clear existing posts
+                    posts.forEach(post => addPostToList(post, true)); // Add 'true' to indicate these are existing posts
+                })
+                .catch(error => console.error('Error fetching posts:', error));
+        }
+
         // Initial display
         authSection.style.display = 'block';
         forumSection.style.display = 'none';
         document.getElementById('post-creation-area').style.display = 'none';
-</script>
+
+        // If the user is already logged in (e.g., page refresh), fetch posts
+        if (isLoggedIn) {
+            fetchPosts();
+        }
+    </script>
 </body>
 </html>
