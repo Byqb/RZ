@@ -5,47 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <title>Real-Time Forum</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> <!-- Pixelated font -->
 </head>
 <body>
-    <div id="auth-section">
-        <a href="#">Real-Zift</a>
+    <div id="auth-section" style="max-width: 400px; width: 100%; padding: 20px; background: rgba(0, 0, 0, 0.472); border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);">
+        <a href="#" style="font-family: 'Press Start 2P', cursive; text-align: center; display: block; margin-bottom: 20px;">Real-Zift</a>
         <form id="register-form">
+            <h2 style="text-align: center;">Register</h2>
             <input type="text" id="reg-nickname" placeholder="Nickname" required>
             <input type="email" id="reg-email" placeholder="Email" required>
             <input type="password" id="reg-password" placeholder="Password" required>
-            <button type="submit">Register</button>
+            <button type="submit" class="xp-button">Register</button>
         </form>
         <form id="login-form">
+            <h2 style="margin: 15px 0 10px; text-align: center;">Login</h2>
             <input type="email" id="login-email" placeholder="Email" required>
             <input type="password" id="login-password" placeholder="Password" required>
-            <button type="submit">Login</button>
+            <button type="submit" class="xp-button">Login</button>
         </form>
     </div>
 
     <div id="forum-section" style="display: none;">
-        <a href="#">Real-Zift</a>
+        <a href="#" class="logo">Real-Zift</a>
+        <button id="logout-btn" class="xp-button">Logout</button> <!-- Logout Button -->
+        <button id="toggle-chat-btn" class="xp-button">Open Chat</button> <!-- Toggle Chat Button -->
         <div id="forum-container">
             <div id="top-section">
                 <div id="chat-and-users">
                     <div id="user-list"></div>
-                    <div id="chat-container">
+                    <div id="chat-container" style="display: none;"> <!-- Initially hidden -->
                         <div id="chat-area">
                             <h3 id="chat-title">Select a user to start chatting</h3>
                             <div id="chat-messages">
-                                <div id="load-more-messages">Load more messages</div>
+                                <div id="load-more-messages" class="xp-button">NOTouch</div>
                             </div>
                             <div id="typing-indicator" style="display: none;"></div>
                             <div id="message-input-area">
                                 <input type="text" id="message-input" placeholder="Type a message">
-                                <button id="send-message">Send</button>
+                                <button id="send-message" class="xp-button">Send</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div id="post-creation-area">
                     <h3>Create a New Post</h3>
-                    <input type="text" id="post-title" placeholder="Post Title">
-                    <textarea id="post-content" placeholder="Post Content"></textarea>
+                    <input type="text" id="post-title" placeholder="Post Title" required>
+                    <textarea id="post-content" placeholder="Post Content" required></textarea>
                     <div class="category-selection">
                         <h4>Select Categories:</h4>
                         <label class="category-option"><input type="checkbox" value="general"> General</label>
@@ -54,7 +59,7 @@
                         <label class="category-option"><input type="checkbox" value="entertainment"> Entertainment</label>
                         <label class="category-option"><input type="checkbox" value="science"> Science</label>
                     </div>
-                    <button id="create-post-btn">Create Post</button>
+                    <button id="create-post-btn" class="xp-button">Create Post</button>
                 </div>
             </div>
             <div id="post-list">
@@ -87,6 +92,21 @@
         const chatMessages = document.getElementById('chat-messages');
         const messageInput = document.getElementById('message-input');
         const sendMessageBtn = document.getElementById('send-message');
+        const toggleChatBtn = document.getElementById('toggle-chat-btn');
+        const chatContainer = document.getElementById('chat-container');
+
+        // Check if user data is stored in localStorage
+        const storedUser = localStorage.getItem('currentUser');
+        if (storedUser) {
+            currentUser = JSON.parse(storedUser);
+            isLoggedIn = true;
+            authSection.style.display = 'none';
+            forumSection.style.display = 'block';
+            document.getElementById('post-creation-area').style.display = 'block';
+            initWebSocket();
+            fetchUsers();
+            fetchPosts(); // Fetch posts after restoring session
+        }
 
         registerForm.addEventListener('submit', handleRegister);
         loginForm.addEventListener('submit', handleLogin);
@@ -96,6 +116,19 @@
         document.getElementById('load-more-messages').addEventListener('click', loadMoreMessages);
         messageInput.addEventListener('input', handleTyping);
         document.getElementById('create-post-btn').addEventListener('click', createPost);
+
+        // Add event listener for logout button
+        document.getElementById('logout-btn').addEventListener('click', logout);
+
+        toggleChatBtn.addEventListener('click', () => {
+            if (chatContainer.style.display === 'none') {
+                chatContainer.style.display = 'block'; // Show chat
+                toggleChatBtn.textContent = 'Close Chat'; // Change button text
+            } else {
+                chatContainer.style.display = 'none'; // Hide chat
+                toggleChatBtn.textContent = 'Open Chat'; // Change button text
+            }
+        });
 
         function handleRegister(e) {
             e.preventDefault();
@@ -110,6 +143,7 @@
                 if (response.ok) {
                     alert('Registration successful. Please log in.');
                 } else {
+                    playSound();
                     alert('Registration failed.');
                 }
             });
@@ -127,13 +161,25 @@
             .then(user => {
                 currentUser = user;
                 isLoggedIn = true;
+                // Store user data in localStorage
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
                 authSection.style.display = 'none';
                 forumSection.style.display = 'block';
                 document.getElementById('post-creation-area').style.display = 'block';
                 initWebSocket();
                 fetchUsers();
-                fetchPosts(); // Add this line to fetch posts after login
-            }).catch(() => alert('Login failed.'));
+                fetchPosts(); // Fetch posts after login
+            }).catch(() => {
+                playSound();
+                alert('Login failed. Nani!!'); // Show funny message
+                 // Play sound on login failure
+            });
+        }
+
+        // Add this function to play the sound
+        function playSound() {
+            const audio = new Audio('nani.mp3'); // Replace with the actual path to your sound file
+            audio.play();
         }
 
         function initWebSocket() {
@@ -535,10 +581,20 @@
                 .catch(error => console.error('Error fetching posts:', error));
         }
 
+        // Add a function to clear user data on logout
+        function logout() {
+            localStorage.removeItem('currentUser');
+            currentUser = null;
+            isLoggedIn = false;
+            authSection.style.display = 'block';
+            forumSection.style.display = 'none';
+            document.getElementById('post-creation-area').style.display = 'none';
+        }
+
         // Initial display
-        authSection.style.display = 'block';
-        forumSection.style.display = 'none';
-        document.getElementById('post-creation-area').style.display = 'none';
+        authSection.style.display = isLoggedIn ? 'none' : 'block';
+        forumSection.style.display = isLoggedIn ? 'block' : 'none';
+        document.getElementById('post-creation-area').style.display = isLoggedIn ? 'block' : 'none';
 
         // If the user is already logged in (e.g., page refresh), fetch posts
         if (isLoggedIn) {
