@@ -116,10 +116,18 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
 		Email    string `json:"email"`
 		Password string `json:"password"`
 	}
-	json.NewDecoder(r.Body).Decode(&user)
+	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
 
-	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
-	_, err := db.Exec("INSERT INTO users (id, nickname, email, password) VALUES (?, ?, ?, ?)",
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		http.Error(w, "Error hashing password", http.StatusInternalServerError)
+		return
+	}
+
+	_, err = db.Exec("INSERT INTO users (id, nickname, email, password) VALUES (?, ?, ?, ?)",
 		uuid.New().String(), user.Nickname, user.Email, hashedPassword)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -130,14 +138,19 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
 	var creds struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
+		Identifier string `json:"identifier"` // Changed to Identifier to accept both email and nickname
+		Password   string `json:"password"`
 	}
-	json.NewDecoder(r.Body).Decode(&creds)
+	if err := json.NewDecoder(r.Body).Decode(&creds); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
 
 	var user User
 	var hashedPassword string
-	err := db.QueryRow("SELECT id, nickname, password FROM users WHERE email = ?", creds.Email).Scan(&user.ID, &user.Nickname, &hashedPassword)
+
+	// Check if the identifier is an email or nickname
+	err := db.QueryRow("SELECT id, nickname, password FROM users WHERE email = ? OR nickname = ?", creds.Identifier, creds.Identifier).Scan(&user.ID, &user.Nickname, &hashedPassword)
 	if err != nil {
 		http.Error(w, "Invalid credentials", http.StatusUnauthorized)
 		return
@@ -330,12 +343,11 @@ func sendTypingStatus(senderID, receiverID string, isTyping bool) {
 		IsTyping: isTyping,
 	}
 
-	// Send typing status to all connected clients
-	for _, conn := range clients {
+	// Send typing status to the receiver
+	if conn, ok := clients[receiverID]; ok {
 		err := conn.WriteJSON(status)
 		if err != nil {
-			log.Printf("%s - Error sending typing status: %v", 
-				time.Now().Format("2006/01/02 15:04:05"), err)
+			log.Printf("Error sending typing status: %v", err)
 		}
 	}
 	clientsMux.Unlock()
