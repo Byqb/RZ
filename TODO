@@ -1,0 +1,17 @@
+Completed Tasks:
+Email validation for registration
+Password space handling
+Message and post space handling with HTML support
+-[X]Implement cookie-based logout for different browser sessions
+-[X]Cookie-based logout for different browser sessions
+-[X]In-page error handling
+-[X]Implementing text-area for long messages and posts with newline access (CSS & HTML)
+-[X]Handle long message and post input with text-area
+
+ TODO:
+Upcoming Tasks
+-[]Real-time updates for posts and comments without page refresh
+
+
+FIXME:
+-[]The post should be handled here so it can be live 

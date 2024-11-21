@@ -1,43 +1,179 @@
+<!-- has been refreshed the messages will show normally -->
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="cards.css">
     <title>Real-Time Forum</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> <!-- Pixelated font -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <!-- Pixelated font -->
 </head>
+
 <body>
+     <!-- card Team -->
+
+
+<style>
+
+    *,
+    *::after,
+    *::before {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    a {
+    
+  all: unset;
+        cursor: pointer;
+        font-weight: bold;
+    font-family: sans-serif;
+    text-decoration: none;
+    background: linear-gradient(90deg, #90f3b3, #90e9f3, #909ff3, #cc90f3, #f390d1, #f39a90, #f3e590, #b8f390) repeat scroll 0% 0% / 200% 200%;
+    background-clip: text;
+    color:
+     transparent;
+    }
+    a:hover {
+        animation: GradientAnimation 2s ease infinite;
+        text-decoration: underline; /* Underline on hover */
+        text-shadow: 0 0 15px #00bfff, 0 0 20px #00bfff; /* Stronger glow on hover */
+    }
+    .book {
+        position: relative;
+        width: 250px;
+        height: 200px;
+        border-radius: 10px;
+        background-color: #effffe;
+        box-shadow: 1px 1px 12px #000;
+        transform-style: preserve-3d;
+        perspective: 2000px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #000;
+        text-align: center;
+        margin: 20px auto;
+    }
+
+    .cover {
+        top: 0;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-image: url(./cover.jpg);
+        background-size: cover;
+        background-position: center;
+        transform-origin: left;
+        box-shadow: 1px 1px 12px #000;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+        transition: transform 0.5s ease;
+        cursor: pointer;
+        backface-visibility: hidden;
+    }
+
+    .book:hover .cover {
+        transform: rotateY(-80deg);
+    }
+
+    .cover > p {
+        text-transform: uppercase;
+        font-size: 13px;
+        letter-spacing: 1px;
+        text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    }
+
+    .cover > h2 > span {
+        color: #1076c9;
+        font-size: 28px;
+        font-weight: bolder;
+        text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    }
+
+    .content {
+        padding: 20px;
+    }
+
+    .content > p {
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+</style>
+    <!-- card Team -->
     <div id="auth-section">
-        <a href="#" style="font-family: 'Press Start 2P', cursive; text-align: center; display: block; margin-bottom: 20px;">Real-Zift</a>
+      <div class="logo"
+      style="font-family: 'Press Start 2P', cursive; text-align: center; display: block; margin-bottom: 20px;">Real-Zift</div>
         <form id="register-form">
             <h2 style="text-align: center; color: aliceblue;">Register</h2>
-            <input type="text" id="reg-nickname" placeholder="Nickname" required style="font-family: 'Press Start 2P', cursive; text-align: center;">
-            <input type="number" id="reg-age" placeholder="Age" required min="1" style="font-family: 'Press Start 2P', cursive; text-align: center;"> <!-- Age field -->
-            <select id="reg-gender" required style="font-family: 'Press Start 2P', cursive; text-align: center;"> <!-- Gender field -->
+            <input type="text" id="reg-nickname" placeholder="Nickname" required
+                style="font-family: 'Press Start 2P', cursive; text-align: center;">
+            <input type="number" id="reg-age" placeholder="Age" required min="1"
+                style="font-family: 'Press Start 2P', cursive; text-align: center;"> <!-- Age field -->
+            <select id="reg-gender" required style="font-family: 'Press Start 2P', cursive; text-align: center;">
+                <!-- Gender field -->
                 <option value="" disabled selected>Select Gender</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
-                <option value="other">Other</option>
+                <option value="other">Engineer</option>
             </select>
-            <input type="text" id="reg-first-name" placeholder="First Name" required style="font-family: 'Press Start 2P', cursive; text-align: center;"> <!-- First Name field -->
-            <input type="text" id="reg-last-name" placeholder="Last Name" required style="font-family: 'Press Start 2P', cursive; text-align: center;"> <!-- Last Name field -->
-            <input type="email" id="reg-email" placeholder="Email" required style="font-family: 'Press Start 2P', cursive; text-align: center;">
-            <input type="password" id="reg-password" placeholder="Password" required style="font-family: 'Press Start 2P', cursive; text-align: center;">
-            <button type="submit" class="xp-button" style="font-family: 'Press Start 2P', cursive; text-align: center;">Register</button>
+            <input type="text" id="reg-first-name" placeholder="First Name" required
+                style="font-family: 'Press Start 2P', cursive; text-align: center;"> <!-- First Name field -->
+            <input type="text" id="reg-last-name" placeholder="Last Name" required
+                style="font-family: 'Press Start 2P', cursive; text-align: center;"> <!-- Last Name field -->
+            <input type="email" id="reg-email" placeholder="Email" required
+                style="font-family: 'Press Start 2P', cursive; text-align: center;">
+            <input type="password" id="reg-password" placeholder="Password" required
+                style="font-family: 'Press Start 2P', cursive; text-align: center;">
+            <button type="submit" class="xp-button"
+                style="font-family: 'Press Start 2P', cursive; text-align: center;">Register</button>
         </form>
         <form id="login-form">
-            <h2 style="margin: 15px 0 10px; text-align: center; color: aliceblue; font-family: 'Press Start 2P', cursive;">Login</h2>
-            <input type="text" id="login-identifier" placeholder="Nickname or Email" required style="font-family: 'Press Start 2P', cursive; text-align: center;"> <!-- Combined field -->
-            <input type="password" id="login-password" placeholder="Password" required style="font-family: 'Press Start 2P', cursive; text-align: center;">
+            <h2
+                style="margin: 15px 0 10px; text-align: center; color: aliceblue; font-family: 'Press Start 2P', cursive;">
+                Login</h2>
+            <input type="text" id="login-identifier" placeholder="Nickname or Email" required
+                style="font-family: 'Press Start 2P', cursive; text-align: center;"> <!-- Combined field -->
+            <input type="password" id="login-password" placeholder="Password" required
+                style="font-family: 'Press Start 2P', cursive; text-align: center;">
             <button type="submit" class="xp-button" style="font-family: 'Press Start 2P', cursive;">Login</button>
         </form>
+
+        <div class="book">
+          <div class="cover">
+            <p>Hover to meet the team</p>
+            <h2>Real-Time Forum<br><span>Project</span></h2>
+            <p>A collaborative chat</p> 
+            <p> &</p>
+            <p>forum platform</p>
+          </div>
+          <div class="content">
+            <p>Developed by:<br>
+              
+              <a href="https://github.com/Byqb">  <strong>Yusuf</strong> </a> & <a href="https://github.com/Abdulla-22"> <strong>Abod</strong> </a>
+            </p>
+            <p>Full-stack developers</p>
+          </div>
+      </div>
     </div>
 
+    
+   
     <div id="forum-section" style="display: none;">
-        <a href="#" class="logo" style="font-family: 'Press Start 2P', cursive; color: aliceblue; " >Real-Zift</a>
-        <button id="logout-btn" class="xp-button" style="font-family: 'Press Start 2P', cursive; color: aliceblue; ">Logout</button> <!-- Logout Button -->
-        <button id="toggle-chat-btn" class="xp-button" style="font-family: 'Press Start 2P', cursive; color: aliceblue; ">Open Chat</button> <!-- Toggle Chat Button -->
+        <a href="#" class="logo" style="font-family: 'Press Start 2P', cursive; color: aliceblue; ">Real-Zift</a>
+        <button id="logout-btn" class="xp-button"
+            style="font-family: 'Press Start 2P', cursive; color: aliceblue; ">Logout</button> <!-- Logout Button -->
+        <button id="toggle-chat-btn" class="xp-button"
+            style="font-family: 'Press Start 2P', cursive; color: aliceblue; ">Open Chat</button>
+        <!-- Toggle Chat Button -->
         <div id="forum-container">
             <div id="top-section">
                 <div id="chat-and-users">
@@ -58,17 +194,24 @@
                 </div>
                 <div id="post-creation-area">
                     <h3>Create a New Post</h3>
-                    <input type="text" id="post-title" placeholder="Post Title" required>
-                    <textarea id="post-content" placeholder="Post Content" required></textarea>
+                    <div class="input-container">
+                        <input type="text" id="post-title" placeholder="Post Title (max 50 chars)" required>
+                    </div>
+                    <div class="input-container">
+                        <textarea id="post-content" placeholder="Post Content (max 70 chars)" required></textarea>
+                    </div>
+                    <div id="content-counter" style="font-size: 12px; color: #666;"></div>
                     <div class="category-selection">
                         <h4>Select Categories:</h4>
                         <label class="category-option"><input type="checkbox" value="general"> General</label>
                         <label class="category-option"><input type="checkbox" value="technology"> Technology</label>
                         <label class="category-option"><input type="checkbox" value="sports"> Sports</label>
-                        <label class="category-option"><input type="checkbox" value="entertainment"> Entertainment</label>
+                        <label class="category-option"><input type="checkbox" value="entertainment">
+                            Entertainment</label>
                         <label class="category-option"><input type="checkbox" value="science"> Science</label>
                     </div>
-                    <button id="create-post-btn" class="xp-button" style="font-family: 'Press Start 2P', cursive; color: aliceblue; ">Create Post</button>
+                    <button id="create-post-btn" class="xp-button"
+                        style="font-family: 'Press Start 2P', cursive; color: aliceblue; ">Create Post</button>
                 </div>
             </div>
             <div id="post-list">
@@ -138,30 +281,60 @@
                 chatContainer.style.display = 'none'; // Hide chat
                 toggleChatBtn.textContent = 'Open Chat'; // Change button text
             }
+            // forcePageRefresh();  
         });
 
         function handleRegister(e) {
             e.preventDefault();
+
+            // Retrieve form values
             const nickname = document.getElementById('reg-nickname').value;
-            const age = document.getElementById('reg-age').value; // Get age
-            const gender = document.getElementById('reg-gender').value; // Get gender
-            const firstName = document.getElementById('reg-first-name').value; // Get first name
-            const lastName = document.getElementById('reg-last-name').value; // Get last name
+            const age = parseInt(document.getElementById('reg-age').value, 10);
+            const gender = document.getElementById('reg-gender').value;
+            const firstName = document.getElementById('reg-first-name').value;
+            const lastName = document.getElementById('reg-last-name').value;
             const email = document.getElementById('reg-email').value;
             const password = document.getElementById('reg-password').value;
 
+            // Simple validation (optional)
+            if (!nickname || isNaN(age) || !gender || !firstName || !lastName || !email || !password) {
+                alert("Please fill out all fields with valid information.");
+                return;
+            }
+
+            /* The password testing */
+            const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            if (!passwordRegex.test(password)) {
+                alert("Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.");
+                return;
+            }
+
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(email)) {
+                alert("Please enter a valid email address.");
+                return; // Stop the function if email is invalid
+            }
+
+
+            // Send request to server
             fetch('/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nickname, age, gender, firstName, lastName, email, password }) // Send new fields
-            }).then(response => {
-                if (response.ok) {
-                    alert('Registration successful. Please log in.');
-                } else {
-                    playSound();
-                    alert('Registration failed.');
-                }
-            });
+                body: JSON.stringify({ nickname, age, gender, firstName, lastName, email, password })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Registration successful. Please log in.');
+                    } else {
+                        response.text().then(errorMessage => {
+                            alert(`Registration failed: ${errorMessage}`);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                });
         }
 
         function handleLogin(e) {
@@ -174,28 +347,28 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ identifier, password }) // Send identifier and password
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Login failed'); // Handle non-200 responses
-                }
-                return response.json();
-            })
-            .then(user => {
-                currentUser = user;
-                isLoggedIn = true;
-                // Store user data in localStorage
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                authSection.style.display = 'none';
-                forumSection.style.display = 'block';
-                document.getElementById('post-creation-area').style.display = 'block';
-                initWebSocket();
-                fetchUsers();
-                fetchPosts(); // Fetch posts after login
-            })
-            .catch(error => {
-                playSound();
-                alert(error.message || 'Login failed. Nani!!'); // Show error message
-            });
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Login failed'); // Handle non-200 responses
+                    }
+                    return response.json();
+                })
+                .then(user => {
+                    currentUser = user;
+                    isLoggedIn = true;
+                    // Store user data in localStorage
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    authSection.style.display = 'none';
+                    forumSection.style.display = 'block';
+                    document.getElementById('post-creation-area').style.display = 'block';
+                    initWebSocket();
+                    fetchUsers();
+                    fetchPosts(); // Fetch posts after login
+                })
+                .catch(error => {
+                    playSound();
+                    alert(error.message || 'Login failed. Nani!!'); // Show error message
+                });
         }
 
         // Add this function to play the sound
@@ -209,20 +382,28 @@
             socket.onmessage = handleWebSocketMessage;
         }
 
+        //TODO: The post should be handled here so it can be live 
         function handleWebSocketMessage(event) {
             const data = JSON.parse(event.data);
-            console.log('Received WebSocket message:', data); // Debug log
+            console.log('Received WebSocket message:', data);
+
             if (data.type === 'online_users') {
                 onlineUsers = new Set(data.users.map(user => user.id));
                 updateUserList();
             } else if (data.type === 'typing_status') {
                 handleTypingStatus(data);
             } else if (data.sender_id === currentChatUser || data.receiver_id === currentChatUser) {
+                // If chat is currently open with this user, display message without notification
                 displayMessage(data);
             } else if (data.sender_id !== currentUser.id) {
-                incrementUnreadMessages(data.sender_id);
-                updateUserList();
+                // Only increment unread messages if we're not currently chatting with this user
+                // or if the chat container is hidden
+                if (data.sender_id !== currentChatUser || chatContainer.style.display === 'none') {
+                    incrementUnreadMessages(data.sender_id);
+                    updateUserList();
+                }
             }
+            fetchUsers();
         }
 
         function handleTypingStatus(data) {
@@ -267,6 +448,7 @@
                             `;
                             userElement.setAttribute('data-user-id', user.id);
                             userElement.onclick = () => loadChat(user.id);
+
                             userList.appendChild(userElement);
                         }
                     });
@@ -311,6 +493,14 @@
             currentPage = 0;
             hasMoreMessages = true;
 
+            // Clear unread messages for this user when opening their chat
+            unreadMessages[userId] = 0;
+            updateUserList(); // Update the UI to remove notification badge
+
+            // Show chat container if it's hidden
+            chatContainer.style.display = 'block';
+            toggleChatBtn.textContent = 'Close Chat';
+
             // Check if we have chat history for this user
             if (chatHistory[userId]) {
                 chatHistory[userId].forEach(message => {
@@ -326,28 +516,51 @@
             document.getElementById('chat-title').textContent = `Chat with ${chatPartner ? chatPartner.nickname : 'Unknown User'}`;
             // Reset typing indicator when changing chats
             document.getElementById('typing-indicator').style.display = 'none';
+
+        }
+
+        // Define the function to send a welcome message
+        function sendWelcomeMessage() {
+            const welcomeMessage = {
+                sender_id: 'system', // Assuming 'system' or another identifier for system messages
+                content: "Welcome to the chat room! Start the conversation by sending a message.",
+                created_at: new Date().toISOString()
+            };
+
+            // Display the welcome message in the chat
+            displayMessage(welcomeMessage);
         }
 
         function fetchMessages() {
             if (!hasMoreMessages || isLoadingMoreMessages) return Promise.resolve();
-            
+
             isLoadingMoreMessages = true;
             return fetch(`/get-messages?user_id=${currentUser.id}&other_user_id=${currentChatUser}&page=${currentPage}`)
                 .then(response => response.json())
                 .then(messages => {
+                    if (!messages || messages.length === 0) {
+                        // If no messages are found and it's the first page, send a welcome message
+                        if (currentPage === 0) {
+                            sendWelcomeMessage();
+                        }
+                        hasMoreMessages = false; // No more messages to fetch
+                        isLoadingMoreMessages = false;
+                        return;
+                    }
+
                     if (messages.length < 10) {
                         hasMoreMessages = false;
                     }
-                    
+
                     const fragment = document.createDocumentFragment();
                     messages.forEach(message => {
                         const messageElement = createMessageElement(message);
                         fragment.appendChild(messageElement);
                     });
-                    
+
                     const scrollHeightBefore = chatMessages.scrollHeight;
                     chatMessages.insertBefore(fragment, chatMessages.firstChild);
-                    
+
                     if (currentPage === 0) {
                         chatMessages.scrollTop = chatMessages.scrollHeight;
                     } else {
@@ -359,13 +572,20 @@
         }
 
         function createMessageElement(message) {
+
+            const escapeHTML = (str) => {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            };
+
             const messageElement = document.createElement('div');
             messageElement.className = 'message';
             const sender = message.sender_id === currentUser.id ? 'You' : (allUsers[message.sender_id] ? allUsers[message.sender_id].nickname : 'Unknown User');
             messageElement.innerHTML = `
                 <span class="sender">${sender}</span>
                 <span class="time">${new Date(message.created_at).toLocaleString()}</span>
-                <p>${message.content}</p>
+                <p>${escapeHTML(message.content)}</p>
             `;
             return messageElement;
         }
@@ -375,7 +595,7 @@
                 if (scrollTimeout !== null) {
                     clearTimeout(scrollTimeout);
                 }
-                
+
                 scrollTimeout = setTimeout(() => {
                     const scrollHeightBefore = chatMessages.scrollHeight;
                     fetchMessages().then(() => {
@@ -405,11 +625,17 @@
         function sendMessage() {
             const content = messageInput.value.trim();
             if (content && currentChatUser) {
+                // Check character count instead of word count
+                if (content.length > 10) { // Limiting to 10 characters
+                    alert('Message cannot be longer than 10 characters!');
+                    return;
+                }
+
                 const message = {
                     sender_id: currentUser.id,
                     receiver_id: currentChatUser,
                     content: content,
-                    created_at: new Date().toISOString() // Use current time
+                    created_at: new Date().toISOString()
                 };
 
                 // Store the message in chat history
@@ -448,12 +674,52 @@
             }
         }
 
+        // Add these constants at the top of your script
+        const TITLE_CHAR_LIMIT = 50;
+        const POST_CONTENT_CHAR_LIMIT = 70;
+        const COMMENT_CHAR_LIMIT = 70;
+
+        // Add character counter for post title
+        document.getElementById('post-title').addEventListener('input', function() {
+            const content = this.value;
+            const charCount = content.length;
+            const remainingChars = TITLE_CHAR_LIMIT - charCount;
+            
+            updateCharCounter(this, remainingChars, 'title-counter');
+        });
+
+        // Add character counter for post content
+        document.getElementById('post-content').addEventListener('input', function() {
+            const content = this.value;
+            const charCount = content.length;
+            const remainingChars = POST_CONTENT_CHAR_LIMIT - charCount;
+            
+            updateCharCounter(this, remainingChars, 'content-counter');
+        });
+
+        // Update the createPost function
         function createPost() {
             const title = document.getElementById('post-title').value;
             const content = document.getElementById('post-content').value;
             const categories = Array.from(document.querySelectorAll('.category-option input:checked')).map(input => input.value);
 
+            if (title.length > TITLE_CHAR_LIMIT) {
+                alert(`Title cannot be longer than ${TITLE_CHAR_LIMIT} characters!`);
+                return;
+            }
+
+            if (content.length > POST_CONTENT_CHAR_LIMIT) {
+                alert(`Post content cannot be longer than ${POST_CONTENT_CHAR_LIMIT} characters!`);
+                return;
+            }
+
             console.log('Attempting to create post:', { title, content, categories });
+
+            const onlySpacesRegex = /^[\s]*$/;
+            if (onlySpacesRegex.test(title) || onlySpacesRegex.test(content)) {
+                alert('Please enter a valid title and content.');
+                return;
+            }
 
             if (!title || !content || categories.length === 0) {
                 alert('Please fill in all fields and select at least one category.');
@@ -468,7 +734,7 @@
 
             fetch('/create-post', {
                 method: 'POST',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                     'User-ID': currentUser.id
                 },
@@ -482,38 +748,52 @@
                 }
                 return response.json();
             })
-            .then(post => {
-                console.log('Post created successfully:', post);
-                document.getElementById('post-title').value = '';
-                document.getElementById('post-content').value = '';
-                document.querySelectorAll('.category-option input:checked').forEach(input => input.checked = false);
-                addPostToList(post, false); // Add new post to the top
-            }).catch(error => {
-                console.error('Error creating post:', error);
-                alert('Error creating post: ' + error.message);
-            });
+                .then(post => {
+                    console.log('Post created successfully:', post);
+                    document.getElementById('post-title').value = '';
+                    document.getElementById('post-content').value = '';
+                    document.querySelectorAll('.category-option input:checked').forEach(input => input.checked = false);
+                    addPostToList(post, false); // Add new post to the top
+                }).catch(error => {
+                    console.error('Error creating post:', error);
+                    alert('Error creating post: ' + error.message);
+                });
         }
 
+        // Update the addPostToList function to add character counter for comments
         function addPostToList(post, addToBottom = false) {
             const postsContainer = document.getElementById('posts');
             const postElement = document.createElement('div');
             postElement.className = 'post';
+
+            // Create a safe way to handle user inputs
+            const escapeHTML = (str) => {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            };
+
             postElement.innerHTML = `
-                <h4>${post.title}</h4>
-                <p>${post.content}</p>
-                <div class="categories">Categories: ${post.categories.join(', ')}</div>
-                <div class="author">Posted by: ${post.user_nickname || currentUser.nickname}</div>
-                <button class="view-comments" data-post-id="${post.id}" style="font-family: 'Press Start 2P', cursive; color: aliceblue; ">View Comments</button>
-                <div class="comment-section" style="display: none;">
-                    ${isLoggedIn ? `
-                        <div class="comment-form">
-                            <input type="text" class="comment-input" style="font-family: 'Press Start 2P', cursive;  " placeholder="Add a comment">
-                            <button class="submit-comment" data-post-id="${post.id}" style="font-family: 'Press Start 2P', cursive; color: aliceblue; ">Submit</button>
-                        </div>
-                    ` : ''}
-                    <div class="comments"></div>
+    <h4>${escapeHTML(post.title)}</h4>
+    <p>${escapeHTML(post.content)}</p>
+    <div class="categories">Categories: ${post.categories.map(escapeHTML).join(', ')}</div>
+    <div class="author">Posted by: ${escapeHTML(post.user_nickname || currentUser.nickname)}</div>
+    <button class="view-comments" data-post-id="${post.id}" style="font-family: 'Press Start 2P', cursive; color: aliceblue;">View Comments</button>
+    <div class="comment-section" style="display: none;">
+        ${isLoggedIn ? `
+            <div class="comment-form">
+                <div class="input-container">
+                    <input type="text" class="comment-input" 
+                        style="font-family: 'Press Start 2P', cursive;" 
+                        placeholder="Add a comment(max 70)">
                 </div>
-            `;
+                <button class="submit-comment" data-post-id="${post.id}" 
+                    style="font-family: 'Press Start 2P', cursive; color: aliceblue;">Submit</button>
+            </div>
+        ` : ''}
+        <div class="comments"></div>
+    </div>
+`;
 
             if (addToBottom) {
                 postsContainer.appendChild(postElement);
@@ -523,7 +803,7 @@
 
             const viewCommentsBtn = postElement.querySelector('.view-comments');
             const commentSection = postElement.querySelector('.comment-section');
-            
+
             viewCommentsBtn.addEventListener('click', () => {
                 if (commentSection.style.display === 'none') {
                     fetchComments(post.id, commentSection.querySelector('.comments'));
@@ -546,6 +826,13 @@
                         createComment(post.id, commentInput.value);
                     }
                 });
+                commentInput.addEventListener('input', function() {
+                    const content = this.value;
+                    const charCount = content.length;
+                    const remainingChars = COMMENT_CHAR_LIMIT - charCount;
+                    
+                    updateCharCounter(this, remainingChars, `comment-counter-${post.id}`);
+                });
             }
         }
 
@@ -555,12 +842,19 @@
                 .then(comments => {
                     commentsContainer.innerHTML = '';
                     comments.forEach(comment => {
+
+                        const escapeHTML = (str) => {
+                            const div = document.createElement('div');
+                            div.textContent = str;
+                            return div.innerHTML;
+                        };
+
                         const commentElement = document.createElement('div');
                         commentElement.className = 'comment';
                         commentElement.innerHTML = `
-                            <div class="comment-content">${comment.content}</div>
+                            <div class="comment-content">${escapeHTML(comment.content)}</div>
                             <div class="comment-meta">
-                                <span class="comment-author">${comment.user_nickname}</span>
+                                <span class="comment-author">${escapeHTML(comment.user_nickname)}</span>
                                 <span class="comment-time">${new Date(comment.created_at).toLocaleString()}</span>
                             </div>
                         `;
@@ -576,9 +870,14 @@
                 return;
             }
 
+            if (content.length > COMMENT_CHAR_LIMIT) {
+                alert(`Comment cannot be longer than ${COMMENT_CHAR_LIMIT} characters!`);
+                return;
+            }
+
             fetch('/create-comment', {
                 method: 'POST',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                     'User-ID': currentUser.id
                 },
@@ -589,28 +888,34 @@
                 }
                 return response.json();
             })
-            .then(comment => {
-                const postElement = document.querySelector(`.post button[data-post-id="${postId}"]`).closest('.post');
-                const commentsContainer = postElement.querySelector('.comments');
-                
-                // Add the new comment to the existing comments
-                const commentElement = document.createElement('div');
-                commentElement.className = 'comment';
-                commentElement.innerHTML = `
-                    <div class="comment-content">${comment.content}</div>
+                .then(comment => {
+                    const postElement = document.querySelector(`.post button[data-post-id="${postId}"]`).closest('.post');
+                    const commentsContainer = postElement.querySelector('.comments');
+
+                    const escapeHTML = (str) => {
+                        const div = document.createElement('div');
+                        div.textContent = str;
+                        return div.innerHTML;
+                    };
+
+                    // Add the new comment to the existing comments
+                    const commentElement = document.createElement('div');
+                    commentElement.className = 'comment';
+                    commentElement.innerHTML = `
+                    <div class="comment-content">${escapeHTML(comment.content)}</div>
                     <div class="comment-meta">
-                        <span class="comment-author">${comment.user_nickname}</span>
+                        <span class="comment-author">${escapeHTML(comment.user_nickname)}</span>
                         <span class="comment-time">${new Date(comment.created_at).toLocaleString()}</span>
                     </div>
                 `;
-                commentsContainer.appendChild(commentElement);
-                
-                // Clear the comment input
-                postElement.querySelector('.comment-input').value = '';
-            }).catch(error => {
-                console.error('Error creating comment:', error);
-                alert('Error creating comment. Please try again.');
-            });
+                    commentsContainer.appendChild(commentElement);
+
+                    // Clear the comment input
+                    postElement.querySelector('.comment-input').value = '';
+                }).catch(error => {
+                    console.error('Error creating comment:', error);
+                    alert('Error creating comment. Please try again.');
+                });
         }
 
         function fetchPosts() {
@@ -630,7 +935,7 @@
             if (socket) {
                 socket.close(); // Close the WebSocket connection
             }
-            
+
             localStorage.removeItem('currentUser');
             currentUser = null;
             isLoggedIn = false;
@@ -648,6 +953,53 @@
         if (isLoggedIn) {
             fetchPosts();
         }
+
+        function forcePageRefresh() {
+            location.reload();
+        }
+
+        // Update the real-time counter to count characters
+        messageInput.addEventListener('input', function() {
+            const content = this.value;
+            const charCount = content.length;
+            const remainingChars = 10 - charCount; // 10 character limit
+            
+            // Update the UI to show remaining characters
+            const charCounter = document.createElement('div');
+            charCounter.id = 'word-counter'; // keeping the same ID for consistency
+            charCounter.style.fontSize = '12px';
+            charCounter.style.color = remainingChars >= 0 ? '#666' : 'red';
+            charCounter.textContent = `${remainingChars} characters remaining`;
+            
+            // Remove existing counter if present
+            const existingCounter = document.getElementById('word-counter');
+            if (existingCounter) {
+                existingCounter.remove();
+            }
+            
+            // Add the new counter
+            messageInput.parentElement.appendChild(charCounter);
+        });
+
+        // Helper function to update character counters
+        function updateCharCounter(element, remainingChars, counterId) {
+            const counter = document.createElement('div');
+            counter.id = counterId;
+            counter.style.fontSize = '12px';
+            counter.style.color = remainingChars >= 0 ? '#666' : 'red';
+            counter.textContent = `${remainingChars} characters remaining`;
+            
+            // Remove existing counter if present
+            const existingCounter = document.getElementById(counterId);
+            if (existingCounter) {
+                existingCounter.remove();
+            }
+            
+            // Add the new counter
+            element.parentElement.appendChild(counter);
+        }
+
     </script>
 </body>
+
 </html>

@@ -65,6 +65,8 @@ body {
 #message-input-area {
     display: flex;
     padding: 10px; /* Padding for message input area */
+    position: relative;
+    padding-bottom: 25px; /* Make room for the counter */
 }
 
 #message-input {
@@ -171,7 +173,7 @@ body {
 }
 
 /* Links */
-a {
+.logo {
     font-size: 5em;
     font-weight: bold;
     font-family: sans-serif;
@@ -181,7 +183,7 @@ a {
     color: transparent;
 }
 
-a:hover {
+.logo:hover {
     animation: GradientAnimation 2s ease infinite;
     text-decoration: underline; /* Underline on hover */
     text-shadow: 0 0 15px #00bfff, 0 0 20px #00bfff; /* Stronger glow on hover */
@@ -362,9 +364,10 @@ a:hover {
 }
 
 .post {
-    border: 2px solid #000;
+    border: 2px solid #00bfff; /* Neon blue border */
     padding: 10px; /* Padding for posts */
     margin-bottom: 10px;
+    box-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff; /* Neon glow effect */
 }
 
 .comment {
@@ -398,5 +401,47 @@ a:hover {
 
 /* Add this to your styles.css */
 .user-item.online .user-name {
-    color: green; /* Change the text color to green for online users */
+    animation: rgbCycle 3s linear infinite;
+}
+
+@keyframes rgbCycle {
+    0% {
+        color: #ff0000;
+        text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 15px #ff0000;
+    }
+    33% {
+        color: #00ff00; 
+        text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 15px #00ff00;
+    }
+    66% {
+        color: #0000ff;
+        text-shadow: 0 0 5px #0000ff, 0 0 10px #0000ff, 0 0 15px #0000ff;
+    }
+    100% {
+        color: #ff0000;
+        text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 15px #ff0000;
+    }
+}
+
+#word-counter {
+    position: absolute;
+    bottom: -20px;
+    right: 10px;
+    font-size: 12px;
+    color: #666;
+}
+
+.input-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+#title-counter,
+#content-counter,
+[id^="comment-counter-"] {
+    position: absolute;
+    bottom: -20px;
+    right: 10px;
+    font-size: 12px;
+    color: #666;
 }
