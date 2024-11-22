@@ -87,25 +87,34 @@
 
     .cover > p {
         text-transform: uppercase;
-        font-size: 13px;
-        letter-spacing: 1px;
+        font-size: 10px;
+        letter-spacing: 0.5px;
         text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+        margin: 5px 0;
+    }
+
+    .cover > h2 {
+        font-size: 18px;
+        margin: 5px 0;
     }
 
     .cover > h2 > span {
         color: #1076c9;
-        font-size: 28px;
+        font-size: 22px;
         font-weight: bolder;
         text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+        display: block;
+        margin-top: 3px;
     }
 
     .content {
-        padding: 20px;
+        padding: 15px;
+        font-size: 12px;
     }
 
     .content > p {
-        margin-bottom: 10px;
-        line-height: 1.4;
+        margin-bottom: 8px;
+        line-height: 1.3;
     }
 </style>
     <!-- card Team -->
@@ -195,10 +204,10 @@
                 <div id="post-creation-area">
                     <h3>Create a New Post</h3>
                     <div class="input-container">
-                        <input type="text" id="post-title" placeholder="Post Title (max 50 chars)" required>
+                        <input type="text" id="post-title" placeholder="Post Title (max 100 chars)" required>
                     </div>
                     <div class="input-container">
-                        <textarea id="post-content" placeholder="Post Content (max 70 chars)" required></textarea>
+                        <textarea id="post-content" placeholder="Post Content (max 100 chars)" required></textarea>
                     </div>
                     <div id="content-counter" style="font-size: 12px; color: #666;"></div>
                     <div class="category-selection">
@@ -548,7 +557,7 @@
                         return;
                     }
 
-                    if (messages.length < 10) {
+                    if (messages.length < 70) {
                         hasMoreMessages = false;
                     }
 
@@ -626,8 +635,8 @@
             const content = messageInput.value.trim();
             if (content && currentChatUser) {
                 // Check character count instead of word count
-                if (content.length > 10) { // Limiting to 10 characters
-                    alert('Message cannot be longer than 10 characters!');
+                if (content.length > 70) { // Limiting to 70 characters
+                    alert('Message cannot be longer than 70 characters!');
                     return;
                 }
 
@@ -675,9 +684,9 @@
         }
 
         // Add these constants at the top of your script
-        const TITLE_CHAR_LIMIT = 50;
-        const POST_CONTENT_CHAR_LIMIT = 70;
-        const COMMENT_CHAR_LIMIT = 70;
+        const TITLE_CHAR_LIMIT = 100;
+        const POST_CONTENT_CHAR_LIMIT = 100;
+        const COMMENT_CHAR_LIMIT = 100;
 
         // Add character counter for post title
         document.getElementById('post-title').addEventListener('input', function() {
@@ -785,7 +794,7 @@
                 <div class="input-container">
                     <input type="text" class="comment-input" 
                         style="font-family: 'Press Start 2P', cursive;" 
-                        placeholder="Add a comment(max 70)">
+                        placeholder="Add a comment(max 100)">
                 </div>
                 <button class="submit-comment" data-post-id="${post.id}" 
                     style="font-family: 'Press Start 2P', cursive; color: aliceblue;">Submit</button>
@@ -962,7 +971,7 @@
         messageInput.addEventListener('input', function() {
             const content = this.value;
             const charCount = content.length;
-            const remainingChars = 10 - charCount; // 10 character limit
+            const remainingChars = 70 - charCount; // 10 character limit
             
             // Update the UI to show remaining characters
             const charCounter = document.createElement('div');
