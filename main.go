@@ -251,7 +251,7 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
 	var creds struct {
-		Identifier string `json:"identifier"` // Changed to Identifier to accept both email and nickname
+		Identifier string `json:"identifier"`
 		Password   string `json:"password"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&creds); err != nil {
@@ -259,11 +259,17 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var user User
+	var user struct {
+		ID        string `json:"id"`
+		Nickname  string `json:"nickname"`
+		FirstName string `json:"firstName"`
+		LastName  string `json:"lastName"`
+	}
 	var hashedPassword string
 
-	// Check if the identifier is an email or nickname
-	err := db.QueryRow("SELECT id, nickname, password FROM users WHERE email = ? OR nickname = ?", creds.Identifier, creds.Identifier).Scan(&user.ID, &user.Nickname, &hashedPassword)
+	// Updated query to include first_name and last_name
+	err := db.QueryRow("SELECT id, nickname, first_name, last_name, password FROM users WHERE email = ? OR nickname = ?", 
+		creds.Identifier, creds.Identifier).Scan(&user.ID, &user.Nickname, &user.FirstName, &user.LastName, &hashedPassword)
 	if err != nil {
 		http.Error(w, "Invalid credentials", http.StatusUnauthorized)
 		return
@@ -274,9 +280,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-
 	CreateSession(w, user.Nickname)
-
 	json.NewEncoder(w).Encode(user)
 }
 
@@ -759,7 +763,7 @@ func customFileServerHandler(w http.ResponseWriter, r *http.Request) {
 // handel password space (finsh)
 // handel message sand post space and the html (finsh)
 
-// handel the long message and post also accessthe user to input a new line (use the text-area insted of input) (in CSS & MTML)
+// handel the long message and post also accessthe user to input a new line (use the text-area insted of input) (in CSS & MTML) (finsh)
 // The post & comments are not live (you need to refresh the page to see the new post)
-// error handling to be in the same page
-// add the seshen  and cookie
+// error handling to be in the same page (finsh)
+// add the seshen  and cookie (finsh)
