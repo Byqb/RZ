@@ -1,3 +1,4 @@
+/* Reset styles */
 html, body {
     height: 100%;
     margin: 0;
@@ -11,44 +12,53 @@ body {
     background-repeat: no-repeat;
 }
 
-/* General Container */
+/* Layout containers */
 .container {
     width: 95%;
     margin: auto;
     overflow: hidden;
-    padding: 20px; /* General padding for the container */
+    padding: 20px;
 }
 
 #auth-section {
-    max-width: 500px; 
-    width: 100%; 
-    padding: 20px; 
+    max-width: 500px;
+    width: 100%;
+    padding: 20px;
     background: rgba(0, 0, 0, 0.472);
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    position: absolute; 
-    top: 50%; 
-    left: 50%; 
+    position: absolute;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
 }
-/* Auth and Forum Sections */
+
 #forum-section {
-    padding: 20px; /* Padding for the forum section */
-    border: 2px solid #00bfff; /* Neon blue border around the section */
-    border-radius: 10px; /* Rounded corners */
-    background-color: #1a2634; /* Dark background for the section */
-    box-shadow: 0 0 20px #00bfff; /* Neon glow effect */
+    padding: 20px;
+    border: 2px solid #00bfff;
+    border-radius: 10px;
+    background-color: rgba(26, 38, 52, 0.9);
+    box-shadow: 0 0 20px #00bfff;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    z-index: 1;
 }
 
-/* Chat Layout */
+/* Chat components */
 #chat-container {
     display: flex;
     flex-direction: column;
     height: 100%;
     flex-grow: 1;
-    border: 2px solid #00bfff; /* Neon blue border */
-    background-color: #233a4d; /* Dark background with transparency */
-    box-shadow: 0 0 20px #00bfff; /* Neon glow effect */
+    border: 2px solid #00bfff;
+    background-color: #233a4d00;
+    box-shadow: 0 0 20px #00bfff;
 }
 
 #chat-area {
@@ -60,15 +70,20 @@ body {
 #chat-messages {
     flex-grow: 1;
     overflow-y: auto;
-    padding: 15px; /* Increased padding for chat messages */
-    box-sizing: border-box;     overflow-wrap: break-word;     word-break: break-word;
+    padding: 15px;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 #message-input-area {
     display: flex;
-    padding: 10px; /* Padding for message input area */
+    padding: 10px;
     position: relative;
-    padding-bottom: 25px; /* Make room for the counter */
+    padding-bottom: 25px;
+    box-sizing: border-box;  
+    overflow-wrap: break-word;     
+    word-break: break-word;
 }
 
 #message-input {
@@ -76,45 +91,44 @@ body {
     margin-right: 10px;
 }
 
-/* User List */
+/* User list */
 #user-list {
     width: 250px;
     min-width: 200px;
     overflow-y: auto;
-    border-right: 1px solid #00bfff; /* Neon blue border */
-    box-shadow: 0 0 20px #00bfff; /* Neon glow effect */
-    padding: 15px; /* Increased padding for user list */
+    border-right: 1px solid #00bfff;
+    box-shadow: 0 0 20px #00bfff;
+    padding: 15px;
     margin-right: 10px;
 }
 
-/* User Item Styles */
 .user-item {
-    background-color: rgba(255, 255, 255, 0.1); /* Added background color for user items */
-    padding: 10px; /* Padding for user items */
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
     cursor: pointer;
-    border: 2px solid #00bfff; /* Neon blue border */
+    border: 2px solid #00bfff;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: gray; /* Set text color to gray */
-    transition: background-color 0.3s; /* Smooth transition for hover effect */
+    color: gray;
+    transition: background-color 0.3s;
 }
 
 .user-item:hover {
-    background-color: rgba(50, 50, 50, 0.8); /* Slightly lighter on hover */
-    box-shadow: 0 0 10px #00bfff; /* Neon glow on hover */
+    background-color: rgba(50, 50, 50, 0.8);
+    box-shadow: 0 0 10px #00bfff;
 }
 
-/* Message Styles */
+/* Messages */
 .message {
     margin-bottom: 10px;
-    padding: 10px; /* Increased padding for messages */
+    padding: 10px;
     border-radius: 5px;
     background-color: #f0f0f0;
     border: 2px solid #000;
 }
 
-/* Notification Badge */
+/* Notifications */
 .notification-badge {
     background-color: red;
     color: white;
@@ -123,57 +137,56 @@ body {
     font-size: 0.8em;
 }
 
-/* Load More Messages */
+/* Load more button */
 #load-more-messages {
     text-align: left;
-    padding: 30px; /* Padding for a circular button */
+    padding: 30px;
     cursor: pointer;
-    background-color: transparent; /* Make background transparent */
-    border: 2px solid #00bfff; /* Neon blue border */
-    border-radius: 50%; /* Make the button circular */
-    color: beige; /* Hide text color */
-    font-size: 15px; /* Smaller font size */
-    font-weight: bold; /* Make text bold */
-    background-clip: text; /* Clip background to text */
-    -webkit-background-clip: text; /* For Safari */
-    animation: rgbDance 1s linear infinite; /* Apply dancing animation */
+    background-color: transparent;
+    border: 2px solid #00bfff;
+    border-radius: 50%;
+    color: beige;
+    font-size: 15px;
+    font-weight: bold;
+    background-clip: text;
+    -webkit-background-clip: text;
+    animation: rgbDance 1s linear infinite;
     text-shadow: 
-        0 0 5px rgba(255, 0, 0, 0.7), 
-        0 0 10px rgba(0, 255, 0, 0.7), 
-        0 0 15px rgba(0, 0, 255, 0.7); /* Neon glow effect */
-    width: 70px; /* Set width for circular button */
-    height: 70px; /* Set height for circular button */
-    line-height: 70px; /* Center text vertically */
-    display: inline-block; /* Allow padding and centering */
+        0 0 5px rgba(255, 0, 0, 0.7),
+        0 0 10px rgba(0, 255, 0, 0.7),
+        0 0 15px rgba(0, 0, 255, 0.7);
+    width: 70px;
+    height: 70px;
+    line-height: 70px;
+    display: inline-block;
 }
 
-/* Keyframes for dancing text animation */
 @keyframes rgbDance {
-    0% { 
-        transform: translateY(0) scale(1); 
-        background: linear-gradient(90deg, #ff0000, #ff0000); /* Red */
+    0% {
+        transform: translateY(0) scale(1);
+        background: linear-gradient(90deg, #ff0000, #ff0000);
     }
-    25% { 
-        transform: translateY(-5px) scale(1.1); 
-        background: linear-gradient(90deg, #00ff00, #00ff00); /* Green */
+    25% {
+        transform: translateY(-5px) scale(1.1);
+        background: linear-gradient(90deg, #00ff00, #00ff00);
     }
-    50% { 
-        transform: translateY(0) scale(1); 
-        background: linear-gradient(90deg, #0000ff, #0000ff); /* Blue */
+    50% {
+        transform: translateY(0) scale(1);
+        background: linear-gradient(90deg, #0000ff, #0000ff);
     }
-    75% { 
-        transform: translateY(5px) scale(1.1); 
-        background: linear-gradient(90deg, #ff0000, #ff0000); /* Red */
+    75% {
+        transform: translateY(5px) scale(1.1);
+        background: linear-gradient(90deg, #ff0000, #ff0000);
     }
-    100% { 
-        transform: translateY(0) scale(1); 
-        background: linear-gradient(90deg, #00ff00, #00ff00); /* Green */
+    100% {
+        transform: translateY(0) scale(1);
+        background: linear-gradient(90deg, #00ff00, #00ff00);
     }
 }
 
 #load-more-messages:hover {
-    transform: scale(1.1); /* Slightly enlarge on hover */
-    transition: transform 0.2s; /* Smooth transition for hover effect */
+    transform: scale(1.1);
+    transition: transform 0.2s;
 }
 
 /* Links */
@@ -189,38 +202,41 @@ body {
 
 .logo:hover {
     animation: GradientAnimation 2s ease infinite;
-    text-decoration: underline; /* Underline on hover */
-    text-shadow: 0 0 15px #00bfff, 0 0 20px #00bfff; /* Stronger glow on hover */
+    text-decoration: underline;
+    text-shadow: 0 0 15px #00bfff, 0 0 20px #00bfff;
 }
 
-/* Typing Indicator */
+/* Typing indicator */
 .user-item .typing-indicator,
 #typing-indicator {
-    background-color: rgba(255, 255, 255, 0.1); /* Added background color */
-    padding: 5px; /* Padding for typing indicator */
-    border-radius: 3px; /* Rounded corners for typing indicator */
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 5px;
+    border-radius: 3px;
     font-style: italic;
     font-size: 0.8em;
     animation: neonPulse 1.5s ease-in-out infinite alternate, rgbShift 5s linear infinite;
     text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 3px #000;
 }
 
-/* Post Creation Area */
+/* Post creation */
 #post-creation-area {
     margin-top: 20px;
-    padding: 15px; /* Padding for post creation area */
+    padding: 15px;
     border: 2px solid #00bfff;
     border-radius: 10px;
-    background-color: #233a4d;
+    background-color: #233a4d00;
     box-shadow: 0 0 10px #00bfff;
 }
 
-#post-creation-area h3 {
+#post-creation-area h3,
+#post-creation-area h4 {
     margin-bottom: 15px;
     color: #00bfff;
+    text-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff, 0 0 30px #00bfff;
+    font-family: 'Press Start 2P', cursive;
 }
 
-/* Category Selection */
+/* Categories */
 .category-selection {
     margin: 10px 0;
 }
@@ -236,104 +252,245 @@ body {
     margin-right: 10px;
 }
 
-/* Post Styles */
-.post {
-    background-color: #fffffff0;
-    border: 2px solid #000;
+#post-title,
+#post-content {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+#post-content {
+    height: 100px;
+    resize: vertical;
+}
+
+#post-list {
+    width: 100%;
+    color: #ffffff;
+}
+
+/* Button styles */
+.xp-button {
+    background-color: #1a2634;
+    border: 2px solid #00bfff;
+    color: #e0e0e0;
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
     border-radius: 5px;
-    padding: 15px; /* Padding for posts */
-    margin-bottom: 20px;
-    box-sizing: border-box;  
-       overflow-wrap: break-word;     
-       word-break: break-word;
+    box-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+}
+
+.xp-button:hover {
+    background-color: #233a4d;
+    transform: scale(1.05);
+    box-shadow: 0 0 25px #00bfff, 0 0 35px #00bfff;
+}
+
+.xp-button:active {
+    background-color: #2a4b63;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 
+/* Posts */
+.post {
+    border: 3px solid #00bfff;
+    padding: 25px;
+    margin: 25px 0;
+    box-shadow: 0 0 20px #00bfff, 0 0 35px rgba(0, 191, 255, 0.5);
+    border-radius: 20px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    background: rgba(255, 255, 255, 0);
+    backdrop-filter: blur(5px);
+}
 
-/* Comment Section Styles */
+.post:hover {
+    transform: scale(1.02) translateY(-5px);
+    box-shadow: 0 0 30px #00bfff, 0 0 50px rgba(0, 191, 255, 0.7);
+    border-color: #00bfff;
+    background: rgba(0, 191, 255, 0.604);
+}
+
+/* Comments */
+.comment {
+    padding: 18px 15px;
+    margin: 15px 0;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+    box-sizing: border-box;  
+    overflow-wrap: break-word;     
+    word-break: break-word;
+}
+
+.comment:hover {
+    background: rgba(255, 0, 255, 0.08);
+    border-left: 3px solid #034510;
+    transform: translateX(5px);
+}
+
 .comment-section {
-    margin-top: 15px;
-    border-top: 1px solid #eee;
-    padding-top: 15px; /* Padding for comment section */
+    margin-top: 20px;
+    border-top: 2px solid;
+    border-image: linear-gradient(90deg, #00bfff, #00ffb369) 1;
+    padding-top: 20px;
+    position: relative;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 0 0 15px 15px;
+    backdrop-filter: blur(8px);
 }
 
 .comment-form {
     display: flex;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    gap: 15px;
+    padding: 10px;
+    background: rgba(0, 191, 255, 0.1);
+    border-radius: 10px;
 }
 
 .comment-input {
     flex-grow: 1;
-    padding: 5px;
-    border: 2px solid #000;
-    border-radius: 3px;
+    padding: 12px;
+    background: rgba(0, 191, 255, 0.2);
+    border: 2px solid rgba(0, 191, 255, 0.3);
+    border-radius: 8px;
+    color: #ffffff;
+    transition: all 0.3s ease;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.9em;
 }
 
+.comment-input:focus {
+    outline: none;
+    border-color: #00bfff;
+    box-shadow: 0 0 15px rgba(0, 191, 255, 0.4);
+    background: rgba(0, 191, 255, 0.3);
+}
+
+/* Buttons */
 .submit-comment {
-    margin-left: 10px;
-    padding: 5px 10px;
-    background-color: #008CBA;
+    padding: 10px 20px;
+    background: linear-gradient(45deg, #00bfff, #00ffb369);
     color: white;
-    border: 2px solid #000;
-    border-radius: 3px;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-size: 0.8em;
+    letter-spacing: 2px;
+    font-family: 'Press Start 2P', cursive;
+    position: relative;
+    overflow: hidden;
 }
 
 .submit-comment:hover {
-    background-color: #007B9A;
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(0, 191, 255, 0.6);
+    animation: glowPulse 1.5s infinite;
 }
 
-/* Individual Comment Styles */
+@keyframes glowPulse {
+    0% { box-shadow: 0 0 20px rgba(0, 191, 255, 0.6); }
+    50% { box-shadow: 0 0 30px rgba(0, 255, 208, 0.287); }
+    100% { box-shadow: 0 0 20px rgba(0, 191, 255, 0.6); }
+}
+
+/* Comment styles */
 .comment {
-    background-color: #fff;
-    border: 2px solid #000;
-    padding: 10px; /* Padding for comments */
-    margin-bottom: 10px;
+    background: linear-gradient(135deg, rgba(0, 191, 255, 0.2), rgba(0, 255, 136, 0.498));
+    border: 2px solid rgba(0, 191, 255, 0.3);
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: all 0.4s ease;
+    position: relative;
+}
+
+.comment:hover {
+    transform: translateX(8px) scale(1.02);
+    box-shadow: -8px 0 15px rgba(0, 191, 255, 0.4);
+    border-image: linear-gradient(45deg, #00bfff, #00ffb369) 1;
+    background: linear-gradient(135deg, rgba(0, 191, 255, 0.3), rgba(0, 255, 128, 0.443));
 }
 
 .comment-content {
-    margin-bottom: 5px;
+    margin-bottom: 12px;
+    color: #ffffff;
+    line-height: 1.6;
+    text-shadow: 0 0 5px rgba(0, 191, 255, 0.3);
 }
 
 .comment-meta {
-    font-size: 0.8em;
-    color: #666;
+    font-size: 0.85em;
+    color: #00bfff00;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-top: 1px solid rgba(0, 191, 255, 0.2);
+    padding-top: 8px;
 }
 
 .comment-author {
     font-weight: bold;
+    background: linear-gradient(45deg, #00bfff, #00ffb369);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 8px rgba(0, 191, 255, 0.5);
 }
 
 .comment-time {
-    margin-left: 10px;
+    opacity: 0.9;
+    font-style: italic;
+    color: #a0a0a0;
 }
 
-/* View Comments Button */
+/* View comments button */
 .view-comments {
-    background-color: #008CBA;
+    background: linear-gradient(45deg, #00bfff, #00ffb369);
     color: white;
-    border: 2px solid #000;
-    padding: 5px 10px;
+    border: none;
+    padding: 12px 25px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 14px;
-    margin: 4px 2px;
+    font-size: 0.9em;
+    margin: 6px 3px;
     cursor: pointer;
-    border-radius: 3px;
+    border-radius: 8px;
+    transition: all 0.4s ease;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-family: 'Press Start 2P', cursive;
+    position: relative;
+    overflow: hidden;
 }
 
 .view-comments:hover {
-    background-color: #007B9A;
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 5px 25px rgba(0, 191, 255, 0.6);
+    animation: borderFlow 2s linear infinite;
 }
 
-/* Forum Layout */
+@keyframes borderFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Forum layout */
 #forum-container {
     display: flex;
     flex-direction: column;
     max-width: 100%;
     margin: 0 auto;
-    padding: 20px; /* Padding for forum container */
+    padding: 20px;
 }
 
 #top-section {
@@ -350,64 +507,8 @@ body {
     height: 100%;
 }
 
-#user-list {
-    width: 30%;
-    overflow-y: auto;
-    padding: 15px; /* Increased padding for user list */
-    margin-right: 10px;
-}
 
-#post-title, #post-content {
-    width: 100%;
-    margin-bottom: 10px;
-}
-
-#post-content {
-    height: 100px;
-    resize: vertical;
-}
-
-#post-list {
-    width: 100%;
-}
-
-.post {
-    border: 2px solid #00bfff; /* Neon blue border */
-    padding: 10px; /* Padding for posts */
-    margin-bottom: 10px;
-    box-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff; /* Neon glow effect */
-}
-
-.comment {
-    border-top: 1px solid #eee;
-    padding: 5px 0; /* Padding for comments */
-}
-
-/* Button Styles */
-.xp-button {
-    background-color: #1a2634; /* Dark gray-blue background */
-    border: 2px solid #00bfff; /* Neon blue border */
-    color: #e0e0e0; /* Light text */
-    padding: 10px 15px; /* Padding for the button */
-    font-size: 14px; /* Font size */
-    cursor: pointer; /* Pointer cursor on hover */
-    border-radius: 5px; /* Rounded corners */
-    box-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff; /* Neon glow effect */
-    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s; /* Smooth transitions */
-}
-
-.xp-button:hover {
-    background-color: #233a4d; /* Slightly lighter gray-blue on hover */
-    transform: scale(1.05); /* Slightly enlarge on hover */
-    box-shadow: 0 0 25px #00bfff, 0 0 35px #00bfff; /* Stronger glow on hover */
-}
-
-.xp-button:active {
-    background-color: #2a4b63; /* Even lighter gray-blue when clicked */
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5); /* Inset shadow on click */
-}
-
-/* Add this to your styles.css */
+/* Online user animation */
 .user-item.online .user-name {
     animation: rgbCycle 3s linear infinite;
 }
@@ -418,7 +519,7 @@ body {
         text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 15px #ff0000;
     }
     33% {
-        color: #00ff00; 
+        color: #00ff00;
         text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 15px #00ff00;
     }
     66% {
@@ -431,6 +532,7 @@ body {
     }
 }
 
+/* Word counter */
 #word-counter {
     position: absolute;
     bottom: -20px;
@@ -454,8 +556,7 @@ body {
     color: #666;
 }
 
-
-/* card Team */
+/* Card team */
 *,
 *::after,
 *::before {
@@ -465,22 +566,22 @@ body {
 }
 
 a {
-
-all: unset;
+    all: unset;
     cursor: pointer;
     font-weight: bold;
-font-family: sans-serif;
-text-decoration: none;
-background: linear-gradient(90deg, #90f3b3, #90e9f3, #909ff3, #cc90f3, #f390d1, #f39a90, #f3e590, #b8f390) repeat scroll 0% 0% / 200% 200%;
-background-clip: text;
-color:
- transparent;
+    font-family: sans-serif;
+    text-decoration: none;
+    background: linear-gradient(90deg, #90f3b3, #90e9f3, #909ff3, #cc90f3, #f390d1, #f39a90, #f3e590, #b8f390) repeat scroll 0% 0% / 200% 200%;
+    background-clip: text;
+    color: transparent;
 }
+
 a:hover {
     animation: GradientAnimation 2s ease infinite;
-    text-decoration: underline; /* Underline on hover */
-    text-shadow: 0 0 15px #00bfff, 0 0 20px #00bfff; /* Stronger glow on hover */
+    text-decoration: underline;
+    text-shadow: 0 0 15px #00bfff, 0 0 20px #00bfff;
 }
+
 .book {
     position: relative;
     width: 250px;
@@ -526,7 +627,7 @@ a:hover {
     text-transform: uppercase;
     font-size: 10px;
     letter-spacing: 0.5px;
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
     margin: 5px 0;
 }
 
@@ -539,7 +640,7 @@ a:hover {
     color: #1076c9;
     font-size: 22px;
     font-weight: bolder;
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
     display: block;
     margin-top: 3px;
 }

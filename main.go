@@ -7,13 +7,8 @@ import (
 
 	"realtime-chat/database"
 	"realtime-chat/handlers"
-	)
-
-
-
-
-
-
+)
+	
 func main() {
 	database.InitDB()
 	defer database.DB.Close()
